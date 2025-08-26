@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -12,18 +11,15 @@ from sklearn.metrics import silhouette_score
 import plotly.express as px
 import plotly.graph_objects as go
 
-# ----------------------- Configuration -----------------------
 API_KEY = "OUVGhxqikMYfcQ5ks7shZSUEaELGxX0ttLuzSubW"
 API_URL = "https://api.nasa.gov/neo/rest/v1/feed"
 DATA_DIR = "nasa_data"
 DATA_FILE = os.path.join(DATA_DIR, "data.json")
-
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# ----------------------- Functions -----------------------
 def fetch_nasa_data(start_date, end_date):
-    """Fetch NEO data from NASA API and save as JSON."""
-    url = f"{API_URL}?start_date={start_date}&end_date={end_date}&api_key={API_KEY}"
+   
+   url = f"{API_URL}?start_date={start_date}&end_date={end_date}&api_key={API_KEY}"
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
@@ -34,7 +30,7 @@ def fetch_nasa_data(start_date, end_date):
         st.error(f"Error fetching data: {response.status_code}")
 
 def load_data():
-    """Load NEO data from JSON and return DataFrame."""
+   
     with open(DATA_FILE, "r") as f:
         raw = json.load(f)
     records = []
@@ -98,7 +94,7 @@ def plot_3d(df, df_anomaly):
         y=df_anomaly["diameter"],
         z=df_anomaly["distance"],
         mode="markers",
-        name="Anomalies 🚨",
+        name="Anomalies",
         marker=dict(size=6, color="red", line=dict(width=1, color="black")),
         opacity=1.0
     )
@@ -120,17 +116,17 @@ def plot_3d(df, df_anomaly):
     )
     return fig
 
-# ----------------------- Streamlit App -----------------------
-st.title("🪐 OrbTrack: NASA Near-Earth Object Analyzer")
+#Streamlit App 
+st.title("🪐 AsteRisk: NASA Near-Earth Object Analyzer")
 
-# Sidebar inputs
+
 st.sidebar.header("Fetch NEO Data")
 start_date = st.sidebar.date_input("Start Date")
 end_date = st.sidebar.date_input("End Date")
 if st.sidebar.button("Fetch Data"):
     fetch_nasa_data(str(start_date), str(end_date))
 
-# Load and process data
+
 df = load_data()
 df, scaled = preprocess_data(df)
 
@@ -140,16 +136,16 @@ df["cluster"] = kmeans_model.labels_
 df["Anomaly"] = detect_anomalies(scaled)
 df_anomaly = df[df["Anomaly"] == -1]
 
-# ----------------------- Dynamic Slider Ranges -----------------------
+
 st.sidebar.header("Filter NEOs")
 
-# Handle cases where df may be empty or have NaN values
+
 if not df.empty:
     vel_min, vel_max = float(df["velocity_kmph"].min()), float(df["velocity_kmph"].max())
     dist_min, dist_max = float(df["distance"].min()), float(df["distance"].max())
     diam_min, diam_max = float(df["diameter"].min()), float(df["diameter"].max())
 
-    # Add some padding for better slider UX
+   
     vel_min, vel_max = max(0.0, vel_min * 0.9), vel_max * 1.1
     dist_min, dist_max = max(0.0, dist_min * 0.9), dist_max * 1.1
     diam_min, diam_max = max(0.0, diam_min * 0.9), diam_max * 1.1
@@ -164,7 +160,7 @@ if not df.empty:
         "Diameter (km)", diam_min, diam_max, (diam_min, diam_max), step=(diam_max - diam_min) / 100
     )
 
-    # ----------------------- Apply Filters -----------------------
+   
     df_filtered = df[
         (df["velocity_kmph"] >= vel_range[0]) & (df["velocity_kmph"] <= vel_range[1]) &
         (df["distance"] >= dist_range[0]) & (df["distance"] <= dist_range[1]) &
@@ -176,7 +172,7 @@ else:
     st.warning("No NEO data available. Please fetch data first.")
     df_filtered, df_anomaly_filtered = df.copy(), df.copy()
 
-# Display data and plot
+
 st.subheader("Filtered NEO Data")
 st.dataframe(df_filtered)
 
