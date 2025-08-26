@@ -18,9 +18,9 @@ DATA_FILE = os.path.join(DATA_DIR, "data.json")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 def fetch_nasa_data(start_date, end_date):
-   
-   url = f"{API_URL}?start_date={start_date}&end_date={end_date}&api_key={API_KEY}"
-   response = requests.get(url)
+    url = f"{API_URL}?start_date={start_date}&end_date={end_date}&api_key={API_KEY}"
+    response = requests.get(url)
+    
     if response.status_code == 200:
         data = response.json()
         with open(DATA_FILE, "w") as f:
@@ -28,6 +28,7 @@ def fetch_nasa_data(start_date, end_date):
         st.success(f"Data fetched and saved for {start_date} to {end_date}")
     else:
         st.error(f"Error fetching data: {response.status_code}")
+
 
 def load_data():
    
