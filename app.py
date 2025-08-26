@@ -20,7 +20,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 def fetch_nasa_data(start_date, end_date):
    
    url = f"{API_URL}?start_date={start_date}&end_date={end_date}&api_key={API_KEY}"
-    response = requests.get(url)
+   response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
         with open(DATA_FILE, "w") as f:
