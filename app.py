@@ -87,7 +87,7 @@ def plot_3d(df, df_anomaly):
         z="distance",
         color="cluster",
         opacity=0.7,
-        title="🪐 OrbTrack: NEO Clusters vs Anomalies"
+        title="🪐 AsteRisk: NEO Clusters vs Anomalies"
     )
 
     anomaly_trace = go.Scatter3d(
